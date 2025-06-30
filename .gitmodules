@@ -2,3 +2,6 @@
 	path = CoupledL2
 	url = https://github.com/LeleCheung/Demo-HBL2
 	branch = demo-hbl2
+[submodule "VLSU"]
+	path = VLSU
+	url = https://github.com/LeleCheung/VLSU.git
