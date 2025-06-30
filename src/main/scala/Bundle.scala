@@ -14,7 +14,7 @@ import freechips.rocketchip.tilelink.TLPermissions._
 import coupledL2._
 
 
-trait AMUParameter {
+trait VPUParameter {
   val pAddrBits: Int = 64 // address bits
 
   // Channel A: ST 32B
@@ -32,11 +32,11 @@ trait AMUParameter {
   val cachelineBytesLog2: Int = 6 // 64B
 }
 
-class AMUBundle extends Bundle with AMUParameter
+class VPUBundle extends Bundle with VPUParameter
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
-class TL_A extends AMUBundle {
+class TL_A extends VPUBundle {
   val a_valid       = Output(Bool())             // valid
   val a_ready       = Input(Bool())             // ready
   val a_opcode      = Output(UInt(4.W))          // PUT/GET
@@ -50,7 +50,7 @@ class TL_A extends AMUBundle {
   val a_corrupt     = Output(UInt(1.W))          /* not used */
 }
 
-class TL_D extends AMUBundle {
+class TL_D extends VPUBundle {
   val d_valid       = Input(Bool())             // valid
   val d_ready       = Output(Bool())             // ready
   val d_opcode      = Input(UInt(4.W))          // ACK
@@ -63,24 +63,24 @@ class TL_D extends AMUBundle {
   val d_corrupt     = Input(UInt(1.W))          /* not used */
 }
 
-class TL_M extends AMUBundle {
+class TL_M extends VPUBundle {
   val m_valid       = Input(Bool())             // valid
   val m_source      = Input(UInt(5.W))  
   val m_data        = Input(UInt(mGetBits.W))   // only for GET request
 }
 */
 
-class TL_Link (implicit p: Parameters, params: TLBundleParameters) extends AMUBundle {
+class TL_Link (implicit p: Parameters, params: TLBundleParameters) extends VPUBundle {
   val a = (DecoupledIO(new TLBundleA(params))) // (new TL_A)
   val d = Flipped((DecoupledIO(new TLBundleD(params)))) // (new TL_D)
   val m = Flipped((DecoupledIO(new MatrixDataBundle())))// (new TL_M)
 }
 
-class HBL2_TL (implicit p: Parameters, params: TLBundleParameters) extends AMUBundle {
+class HBL2_TL (implicit p: Parameters, params: TLBundleParameters) extends VPUBundle {
   val hbl2_tl = Vec(8, new TL_Link) // 8 banks, 8 links
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-class RegInfo (implicit p: Parameters) extends AMUBundle{
+class RegInfo (implicit p: Parameters) extends VPUBundle{
   val reginfo = (Vec(8, new DSBlock()))
 }

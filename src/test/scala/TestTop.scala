@@ -79,7 +79,7 @@ class TestTopIO(implicit p: Parameters) extends Bundle {
 }
 */
 
-class TestTop_AMU_L2_L3_RAM()(implicit p: Parameters, params: TLBundleParameters) extends LazyModule {
+class TestTop_VPU_L2_L3_RAM()(implicit p: Parameters, params: TLBundleParameters) extends LazyModule {
 
   override lazy val desiredName: String = "TestTop"
   val delayFactor = 0.2
@@ -132,8 +132,8 @@ class TestTop_AMU_L2_L3_RAM()(implicit p: Parameters, params: TLBundleParameters
   //     ))
   //   }
   // }
-  val amu = LazyModule(new AMU()(p, params))
-  val matrix_nodes = amu.matrix_nodes
+  val vpu = LazyModule(new VPU()(p, params))
+  val matrix_nodes = vpu.matrix_nodes
   val c_nodes = Seq(l1d)
   val l1i_nodes = Seq(l1i)
   val ul_nodes = l1i_nodes++matrix_nodes
@@ -215,7 +215,7 @@ class TestTop_AMU_L2_L3_RAM()(implicit p: Parameters, params: TLBundleParameters
   matrix_nodes.zipWithIndex map{ case(m,i) =>
         l1xbar := TLBuffer() := TLLogger(s"L2_Matrix[${i}]", true) := m
   }
-  // amu.matrix_nodes.zipWithIndex map{ case(ul,i) =>
+  // vpu.matrix_nodes.zipWithIndex map{ case(ul,i) =>
   //       l1xbar := TLBuffer() := TLLogger(s"L2_Matrix[${i}]", true) := ul
   // }
 
@@ -257,28 +257,28 @@ class TestTop_AMU_L2_L3_RAM()(implicit p: Parameters, params: TLBundleParameters
     l2.module.io.matrixDataOut512L2:= DontCare
 
     // For matrix get , l2 return data
-    val matrix_data_out = amu.module.io.matrix_data_in
+    val matrix_data_out = vpu.module.io.matrix_data_in
     //IO(Vec(l2_banks, DecoupledIO(new MatrixDataBundle())))
     matrix_data_out <> l2.module.io.matrixDataOut512L2
 
     // initialize
-    amu.module.io.init_fire := false.B
-    amu.module.io.ld_fire   := true.B
-    amu.module.io.st_fire   := false.B
-    amu.module.io.reg_in := DontCare
+    vpu.module.io.init_fire := false.B
+    vpu.module.io.ld_fire   := true.B
+    vpu.module.io.st_fire   := false.B
+    vpu.module.io.reg_in := DontCare
 
     /*
-    // connect amu & testtop
-    amu.module.io.init_fire := io.init_fire
-    amu.module.io.ld_fire   := io.ld_fire
-    amu.module.io.st_fire   := io.st_fire
+    // connect vpu & testtop
+    vpu.module.io.init_fire := io.init_fire
+    vpu.module.io.ld_fire   := io.ld_fire
+    vpu.module.io.st_fire   := io.st_fire
 
-    io.init_done := amu.module.io.init_done
-    io.ld_done := amu.module.io.ld_done
-    io.st_done := amu.module.io.st_done
+    io.init_done := vpu.module.io.init_done
+    io.ld_done := vpu.module.io.ld_done
+    io.st_done := vpu.module.io.st_done
 
-    amu.module.io.reg_in := io.reg_in
-    io.reg_out := amu.module.io.reg_out
+    vpu.module.io.reg_in := io.reg_in
+    io.reg_out := vpu.module.io.reg_out
     */
   }
 
@@ -322,7 +322,7 @@ object TestTop_L2L3_AME extends App {
     responseFields = Nil,
     hasBCE = false
   )
-  val top = DisableMonitors(p => LazyModule(new TestTop_AMU_L2_L3_RAM()(p, tlBundleParams)))(config)
+  val top = DisableMonitors(p => LazyModule(new TestTop_VPU_L2_L3_RAM()(p, tlBundleParams)))(config)
   (new ChiselStage).execute(args, Seq(
     ChiselGeneratorAnnotation(() => top.module)
   ))
@@ -397,7 +397,7 @@ class TestTop_L2L3_AME_ChiselTest extends AMETester with UseVerilatorBackend wit
       hasBCE = false
     )
     
-    val top = DisableMonitors(p => LazyModule(new TestTop_AMU_L2_L3_RAM()(p, tlBundleParams)))(defaultConfig)
+    val top = DisableMonitors(p => LazyModule(new TestTop_VPU_L2_L3_RAM()(p, tlBundleParams)))(defaultConfig)
     test(top.module).withAnnotations(testAnnos) { dut =>  
       // ChiselDB.addToFileRegisters
       // Constantin.addToFileRegisters

@@ -13,13 +13,13 @@ import freechips.rocketchip.diplomacy._
 import freechips.rocketchip.tilelink.TLPermissions._
 import coupledL2._
 
-import hbl2demo.AMUParameter
+import hbl2demo.VPUParameter
 import hbl2demo.HBL2_TL
 import hbl2demo.RegInfo
 import utility.TLLogger.a
 
 
-class AMUCore_IO (implicit p: Parameters, params: TLBundleParameters) extends AMUBundle {
+class VPUCore_IO (implicit p: Parameters, params: TLBundleParameters) extends VPUBundle {
   val init_fire = Input(Bool())
   val ld_fire   = Input(Bool())
   val st_fire   = Input(Bool())
@@ -33,8 +33,8 @@ class AMUCore_IO (implicit p: Parameters, params: TLBundleParameters) extends AM
   val reg_in    = Input(new RegInfo)
 }
 
-class AMUCore (implicit p: Parameters, params: TLBundleParameters) extends Module with AMUParameter {
-  val io = IO(new AMUCore_IO)
+class VPUCore (implicit p: Parameters, params: TLBundleParameters) extends Module with VPUParameter {
+  val io = IO(new VPUCore_IO)
 
   // initialize IO
   io.init_done := false.B
