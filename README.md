@@ -1,12 +1,12 @@
-# HBL2 AMU Demo
+# VPU-HBL2
 
-A Simple AMU using HBL2 as package.
+Vector Processing Unit (VPU) + HBL2 (High Bandwidth L2)
 
 Initialization:
 
 ```BASH
-git clone git@github.com:LeleCheung/HBL2-AMU-Demo.git  
-cd HBL2-AMU-Demo
+git clone git@github.com:LeleCheung/VPU-HBL2.git  
+cd VPU-HBL2
 git submodule update --init --recursive
 ```
 
@@ -26,18 +26,5 @@ make clean
 ```
 
 
-SIMPLE TEST:
+![VLsu](images/VLsu.png)
 
-- Init the register
-- Store the data back to HBL2
-- Load the data from HBL2
-- Check the register value
-
-
-## AMU v0: No Computing Core, only test for LD/ST.
-
-![AMU v0](images/v0.png)
-
-## AMU v1: Add Computing Core, test for LD/ST and MMA.
-
-![AMU v1](images/v1.png)
